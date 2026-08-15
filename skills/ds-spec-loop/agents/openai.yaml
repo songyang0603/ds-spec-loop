@@ -1,0 +1,4 @@
+interface:
+  display_name: "DS Spec Loop"
+  short_description: "Run full repository-native spec development loops"
+  default_prompt: "Use $ds-spec-loop to design and execute this change as a full repository-native spec loop."

@@ -1,0 +1,15 @@
+ds-spec-loop
+Copyright (c) 2026 songyang0603
+
+This independent community project is informed by analysis of the public
+DeepSeek Harness repository:
+
+  https://github.com/deepseek-ai/deepseek-harness
+
+DeepSeek Harness is distributed under the MIT License by its respective
+copyright holders. ds-spec-loop does not redistribute DeepSeek Harness source
+code and is not affiliated with or endorsed by DeepSeek.
+
+The Agent Skills specification is maintained at:
+
+  https://agentskills.io/
