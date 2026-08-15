@@ -1,6 +1,6 @@
 ---
 name: ds-spec-loop
-description: Run a complete repository-native, spec-anchored development loop inspired by DeepSeek Harness. Use for non-trivial feature, bug-fix, simplification, architecture, process, or testing changes; when asked to write, review, continue, implement, reject, supersede, archive, or verify a spec/Agent Note/RFC/ADR; or when code, tests, current-state docs, and decision rationale must converge in one change. Also use for read-only spec-to-code drift checks. Do not create a spec for a purely mechanical local edit that changes no behavior, contract, structure, process, test strategy, or durable rationale.
+description: Run a complete repository-native, spec-anchored development loop inspired by DeepSeek Harness. Use for feature development, bug fixes, simplification, architecture, process, or testing work that changes behavior, contracts, structure, test strategy, durable formats, or decision rationale; when asked to write, review, continue, implement, reject, supersede, archive, or verify a spec/Agent Note/RFC/ADR; or when code, tests, current-state docs, and decision rationale must converge in one change. Also use for read-only spec-to-code drift checks. Do not create a spec for a purely mechanical local edit that changes none of those things.
 ---
 
 # DS Spec Loop

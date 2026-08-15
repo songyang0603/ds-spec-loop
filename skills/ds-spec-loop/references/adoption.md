@@ -27,7 +27,7 @@ Use the six default classes from [agent-note-lifecycle.md](agent-note-lifecycle.
 Keep the root instructions short. Include:
 
 - where current architecture and subsystem docs live;
-- where decision notes live and when a non-trivial change requires one;
+- where decision notes live and which behavior, contract, structure, process, test-strategy, durable-format, or rationale changes require one;
 - high-value architecture invariants;
 - build, focused test, docs-sync, and full CI commands;
 - the rule that model/user-visible behavior needs evidence through a runnable assembled path;
@@ -68,4 +68,4 @@ Do not encode semantic judgment—problem quality, alternative plausibility, use
 
 ## Gradual adoption
 
-Do not rewrite all historical decisions. Apply the system to the next non-trivial change, then repair nearby active authority as work touches it. Preserve existing history. Add automation only when repeated mechanical drift demonstrates its value.
+Do not rewrite all historical decisions. Apply the system to the next change that affects behavior, contracts, structure, process, test strategy, durable formats, or decision rationale, then repair nearby active authority as work touches it. Preserve existing history. Add automation only when repeated mechanical drift demonstrates its value.

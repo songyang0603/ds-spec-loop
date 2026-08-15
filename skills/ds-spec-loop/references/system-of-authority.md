@@ -46,7 +46,7 @@ Code can reveal what exists, but not always what is intended. A note can reveal 
 
 ## Current-state convergence
 
-A non-trivial change is not converged until all changed facts have one current owner and all dependent summaries agree. Typical drift checks include:
+A change that affects behavior, contracts, structure, process, test strategy, durable formats, or decision rationale is not converged until all changed facts have one current owner and all dependent summaries agree. Typical drift checks include:
 
 - note paths and names match the tree;
 - README examples match public types and defaults;
