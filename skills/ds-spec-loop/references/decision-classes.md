@@ -1,76 +1,63 @@
 # Decision classes
 
-Choose one primary class for the durable decision. A change may touch many surfaces; do not create duplicate notes for each surface.
+Use the host repository's existing taxonomy. If none exists, choose one primary semantic class below. A class guides investigation and evidence; it does not require a folder.
 
 ## Feature
 
-Use for a new user-, model-, or external-caller-visible capability.
+Use for a new user-, model-, or external-caller-visible capability. Record:
 
-The note should establish:
+- public behavior and ownership;
+- how the capability is defined, composed, and consumed;
+- lifecycle, cleanup, persistence, permission, and failure behavior when relevant;
+- real alternatives and surrendered capability.
 
-- the public behavior and ownership boundary;
-- how the capability is defined, provided, loaded, and consumed;
-- lifecycle, cleanup, persistence, replay, or permission semantics when relevant;
-- compatibility and failure behavior;
-- what simpler or narrower alternatives were rejected.
-
-Evidence should normally include the real composition path, consumer behavior, user/model-visible evidence, and current public documentation. A leaf implementation test alone does not prove availability.
+Evidence normally includes the real composition path, consumer behavior, visible output, and current public documentation.
 
 ## Bug fix
 
-Use to restore an existing intended contract.
+Use to restore an intended contract. Record:
 
-The note should establish:
-
-- a reproducible failure or direct evidence of the gap;
-- the root cause rather than only the symptom;
-- the smallest semantic correction;
+- reproducible failure or direct gap;
+- root cause rather than symptom;
+- smallest semantic correction;
 - why adjacent behavior remains unchanged;
-- whether the defect reveals a missing invariant, test layer, or process rule.
+- whether the defect exposes a missing invariant, evidence layer, or process rule.
 
-Prefer regression evidence that fails before the fix and passes after it. Do not broaden a bug fix into a redesign unless the root cause requires a new decision; if so, make that decision explicit.
+Prefer regression evidence that fails before the fix and passes after it. Update an existing owner when one owns the intended contract. If no decision record or equivalent contract artifact owns a non-mechanical correction, create a narrowly scoped bug-fix owner; do not leave the strict loop without an owner.
 
 ## Simplification
 
-Use to remove code, behavior, package surface, compatibility, or duplicated ownership without adding a capability.
+Use to remove behavior, code, package surface, compatibility, or duplicate ownership without adding a capability. Record:
 
-The note should name:
-
-- the complexity or duplicate owner being removed;
-- the surviving owner;
-- externally observable behavior that remains;
+- complexity or duplicate owner removed;
+- surviving owner;
+- behavior retained;
 - negative acceptance proving the old path is absent;
 - capability or compatibility surrendered;
-- conditions for reintroduction.
+- reintroduction conditions.
 
-Read [simplification.md](simplification.md) before acting.
+Read [simplification.md](simplification.md).
 
 ## Architecture
 
-Use for shipped-source structure: package/module ownership, dependency direction, runtime vocabulary, protocol, persistence model, or capability seam.
+Use for shipped-source structure: module/package ownership, dependency direction, runtime concepts, protocol, persistence model, or replaceable capability boundaries.
 
-The note should make topology and invariants explicit. Evidence should normally include manifests/imports or structural checks, public types, provider-consumer composition, integration behavior, and synchronized architecture docs.
-
-Do not classify surrounding tooling or contribution workflow as architecture; that is process.
+Make topology and invariants explicit. Evidence normally includes manifests/imports or structural checks, public contracts, real composition, integration behavior, and synchronized architecture docs.
 
 ## Process
 
-Use for tooling, policy, contribution workflow, release, documentation workflow, or CI around the shipped source.
+Use for tooling, contribution policy, release, documentation workflow, or CI around shipped source.
 
-Distinguish a review-enforced policy from a mechanically enforced one. If the decision claims deterministic enforcement, implement the gate, test the gate's meaningful failure mode, wire it into the real developer/CI path, and update contributor instructions. If automation is not justified, say that review remains the enforcement mechanism.
-
-Do not add a checker merely because the decision is classified as process. The rule must be important, decidable, and likely to drift.
+Distinguish review-enforced policy from mechanical enforcement. Add a check only when the rule is important, decidable, uncovered, and likely to drift. If automation is not justified, state that review remains the enforcement mechanism.
 
 ## Testing
 
-Use for test architecture, fixtures, determinism, snapshot policy, end-to-end lanes, and CI test layering.
+Use for test architecture, fixtures, determinism, snapshot policy, end-to-end lanes, or CI layering. Record:
 
-The note should establish:
-
-- which failure an existing test layer cannot catch;
-- why the proposed evidence is closer to the real consumer;
-- how fixtures and snapshots remain deterministic and reviewable;
+- which failure existing evidence cannot catch;
+- why the new evidence is closer to the consumer;
+- how fixtures and outputs remain deterministic and reviewable;
 - how the lane enters normal local or CI execution;
-- what the test infrastructure passing does and does not prove.
+- what passing infrastructure does and does not prove.
 
-When practical, verify the lane with an intentionally failing fixture or pre-fix failure, then restore the passing state. Do not confuse successful test orchestration with successful product behavior.
+When practical, demonstrate the lane against a known failing condition before restoring the passing state.

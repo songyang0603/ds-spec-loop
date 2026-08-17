@@ -2,153 +2,134 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-> A reusable Agent Skill that applies Spec programming patterns observed in DeepSeek Harness to software development in other repositories.
+> A general Spec programming Skill for coding agents.
 
 `ds-spec-loop` helps coding agents keep requirements, decisions, implementation, tests, and documentation consistent while building features, fixing bugs, changing architecture or interfaces, improving tests and development processes, or removing code.
 
 Here, Spec programming does not mean writing a long plan before coding. It means using the repository itself as the source of truth: instructions describe constraints, current documentation describes the system as it exists, decision records preserve why choices were made, and code plus tests provide executable evidence.
 
-## 🧭 Method source
+## Method origin
 
-This Skill is an independent community project based on patterns observable in the public [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) repository and its Git history. Those patterns include:
+This independent community project was developed from analysis of Spec and decision practices visible in the public [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) repository and Git history.
 
-- repository-level and directory-level instructions for agents;
-- current-state architecture and package documentation;
-- decision records with `proposed`, `implemented`, `rejected`, `superseded`, and `archived` states;
-- implementation across the actual integration and runtime path;
-- acceptance criteria tied to direct evidence;
-- updates to code, tests, generated artifacts, and documentation in the same change.
+The runtime Skill uses general terms and does not require that repository's directories, framework, or test commands. This project is not official, is not affiliated with or endorsed by DeepSeek, and does not redistribute DeepSeek Harness source code. See [NOTICE](NOTICE).
 
-`ds-spec-loop` turns these observed practices into a portable Agent Skill. It is not an official DeepSeek project, is not endorsed by DeepSeek, and does not redistribute DeepSeek Harness source code.
+## 🚀 Install and use
 
-## ✨ What the Skill does
+### Community Skills CLI
 
-| Capability | What the Agent does |
-| --- | --- |
-| Understand the repository before editing | Reads applicable instructions, current docs, existing decisions, relevant source, tests, generated files, and Git history when needed |
-| Maintain decision records | Creates or updates the record that owns a decision, and keeps its lifecycle accurate as work is implemented, rejected, superseded, or archived |
-| Define verifiable acceptance criteria | Connects each requirement to observable behavior, likely failure points, and evidence that can confirm or disprove completion |
-| Implement the complete path | Follows the change through definitions, providers, registration or loading, consumers, persistence, and user- or model-facing behavior where applicable |
-| Keep the repository consistent | Updates affected code, public contracts, tests, snapshots, generated artifacts, current documentation, and decision rationale together |
-| Support simplification and deletion | Checks real consumers and removes obsolete registrations, exports, files, tests, documentation, and compatibility surfaces—not only the main source file |
-| Review without modifying | Can perform a read-only comparison of active decisions, source, tests, generated artifacts, and current documentation |
-| Fit existing conventions | Reuses a repository's ADR, RFC, design-doc, or Spec system instead of creating a competing documentation structure |
-
-Use it for feature development, bug fixes, API or configuration changes, architecture changes, test-strategy changes, development-process changes, code removal, or Spec-to-code review. A spelling correction, formatting-only edit, or other local mechanical change normally does not need this Skill.
-
-## 🚀 Quick start
-
-Install with the community-maintained cross-agent [`skills`](https://skills.sh/) CLI:
+The community-maintained [`skills`](https://skills.sh/) installer requires Node.js and lets you choose the target coding agent and installation scope:
 
 ```bash
 npx skills add songyang0603/ds-spec-loop
 ```
-
-Then invoke it in Codex:
-
-```text
-Use $ds-spec-loop to implement this feature.
-Before editing, inspect the repository's instructions, current documentation,
-existing decisions, relevant source, tests, and actual integration path.
-Keep the decision record, implementation, evidence, and documentation consistent.
-```
-
-Explicit invocation depends on the host:
-
-| Host | Invoke |
-| --- | --- |
-| Codex | `$ds-spec-loop` |
-| Claude Code | `/ds-spec-loop` |
-| GitHub Copilot CLI | `/ds-spec-loop` |
-| Other compatible agents | Use the host's documented Skill invocation or mention `ds-spec-loop` by name |
-
-### Common usage
-
-Write a Spec without implementing it:
-
-```text
-Use $ds-spec-loop to investigate this change and write the proposed decision record.
-Do not implement it. Describe the problem independently of the preferred solution,
-compare real alternatives, and connect acceptance criteria to direct evidence.
-```
-
-Continue an existing proposal:
-
-```text
-Use $ds-spec-loop to continue the existing proposed decision through implementation,
-testing, documentation updates, and the correct lifecycle transition.
-```
-
-Review consistency without changing files:
-
-```text
-Use $ds-spec-loop to check whether active decisions, source, public contracts,
-tests, generated artifacts, and current documentation agree. Do not modify files.
-```
-
-Simplify or remove code:
-
-```text
-Use $ds-spec-loop to investigate the real consumers of this code and plan its removal.
-If removal is justified, update the full integration path and verify that obsolete files,
-registrations, exports, tests, and documentation no longer remain.
-```
-
-The requested task boundary remains binding: a review-only task stays read-only, and a Spec-only task does not silently become implementation. For Claude Code or GitHub Copilot CLI, replace `$ds-spec-loop` with `/ds-spec-loop`.
-
-## 🧩 How it works
-
-The Skill treats the Spec as a set of connected repository records:
-
-```text
-instructions + current documentation + decision records
-                           ↕
-       source + types + configuration + integration path
-                           ↕
-       tests + runnable behavior + generated artifacts
-```
-
-- **Current documentation** explains what the repository does now.
-- **Decision records** explain why a decision was proposed, accepted, rejected, replaced, or retained.
-- **Source and public contracts** implement the decision.
-- **Tests and runnable paths** provide evidence for observable behavior.
-- **Repository-specific checks** enforce facts that can be decided mechanically.
-
-The Agent updates only the records affected by the task. It does not assume that a format check proves semantic correctness, or that changing one module means the feature works through the complete system.
-
-## 📦 Installation
-
-The [Agent Skills specification](https://agentskills.io/specification) standardizes the portable `SKILL.md` package. Discovery directories and invocation syntax remain host-specific.
-
-### Cross-agent installer
-
-```bash
-npx skills add songyang0603/ds-spec-loop
-```
-
-The installer discovers `skills/ds-spec-loop/SKILL.md` and lets you select the target Agent and installation scope.
 
 ### GitHub CLI
-
-GitHub CLI also provides a preview Agent Skills installer:
 
 ```bash
 gh skill install songyang0603/ds-spec-loop ds-spec-loop --agent codex --scope user
 ```
 
-Replace `codex` with `claude-code` or `github-copilot` for those hosts.
+Replace `codex` with `claude-code` or `github-copilot` when appropriate.
 
 ### Manual installation
 
-Clone the repository, then copy `skills/ds-spec-loop` into a supported discovery directory:
+Clone or download this repository, then copy the entire `skills/ds-spec-loop` directory:
 
 | Host | User scope | Repository scope |
-| --- | --- | --- |
+|---|---|---|
 | Codex | `~/.agents/skills/ds-spec-loop` | `.agents/skills/ds-spec-loop` |
 | Claude Code | `~/.claude/skills/ds-spec-loop` | `.claude/skills/ds-spec-loop` |
-| GitHub Copilot CLI | `~/.copilot/skills/ds-spec-loop` or `~/.agents/skills/ds-spec-loop` | `.github/skills/ds-spec-loop` or `.agents/skills/ds-spec-loop` |
+| GitHub Copilot | `~/.copilot/skills/ds-spec-loop` or `~/.agents/skills/ds-spec-loop` | `.github/skills/ds-spec-loop`, `.claude/skills/ds-spec-loop`, or `.agents/skills/ds-spec-loop` |
 
-Codex and Claude Code also document support for linked Skill directories. For GitHub Copilot CLI, use a copy or its documented directory-registration mechanism. See the official [Codex](https://developers.openai.com/codex/skills/), [Claude Code](https://code.claude.com/docs/en/skills), and [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills) documentation for current behavior.
+See the current official documentation for [Codex](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/skills), and [GitHub Copilot](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills).
+
+### Invoke the Skill
+
+| Host | Command |
+|---|---|
+| Codex | `$ds-spec-loop` |
+| Claude Code | `/ds-spec-loop` |
+| GitHub Copilot CLI | `/ds-spec-loop` |
+
+Examples below use Codex syntax. Replace `$ds-spec-loop` with `/ds-spec-loop` in Claude Code or GitHub Copilot CLI.
+
+Implement a change:
+
+```text
+Use $ds-spec-loop to implement this change. Reuse the repository's existing
+decision, documentation, test, and CI conventions, and keep them consistent.
+```
+
+Write a proposal without implementing it:
+
+```text
+Use $ds-spec-loop to investigate this change and write its proposal.
+Do not implement it. Compare real alternatives and define direct checks.
+```
+
+Review without modifying:
+
+```text
+Use $ds-spec-loop to check whether proposals, decisions, code, tests,
+generated files, and current documentation agree. Do not modify files.
+```
+
+The requested task boundary remains binding: review-only stays read-only, and proposal-only does not silently become implementation.
+
+## ✨ What it does
+
+| Feature | What the agent does |
+|---|---|
+| Understand existing conventions | Reads applicable instructions, proposals, decisions, current docs, source, tests, generated files, CI, and relevant Git history |
+| Reuse one decision record | Updates the record already responsible for the change; creates a narrowly scoped record when none exists |
+| Write testable acceptance criteria | States what should be observable, where it can fail, and which direct check can disprove completion |
+| Trace the affected integration path | Checks the layers that actually connect the change to its caller, runtime, persistence, or visible result |
+| Handle changed requirements | Revises an unfinished proposal in place; creates a replacement record only after a delivered decision is reversed |
+| Keep the repository consistent | Updates affected decisions, code, tests, generated files, public contracts, and current docs in the same pull request or linked changes |
+| Remove code completely | Checks real consumers and removes obsolete code, registration, exports, config, tests, docs, and compatibility behavior |
+
+The core rule is:
+
+> Every non-mechanical change creates or updates one decision record responsible for that change.
+
+A spelling correction, formatting-only edit, or other local mechanical change is exempt only when it changes no behavior, contract, structure, process, test strategy, stored-data format, or rationale.
+
+## 🧭 How it works
+
+The Skill does not impose one directory layout. It first finds which existing files already perform each job.
+
+| Responsibility | Common repository forms |
+|---|---|
+| Working rules | `AGENTS.md`, `CLAUDE.md`, Copilot instructions |
+| Unfinished decision | Spec, RFC, proposal, design doc, draft ADR |
+| Current decision | ADR, decision record, implemented design, shipped RFC |
+| Current system description | architecture docs, README, API or package docs |
+| Focused checks | `pytest`, `cargo test`, `go test`, `pnpm test`, real CLI/UI/API checks |
+| Full checks | GitHub Actions, Makefile, pre-commit, repository scripts |
+
+A Python project is not told to run `pnpm test`. A repository that already uses ADRs is not told to create another decision directory.
+
+If no equivalent convention exists, the Skill proposes only a small fallback: repository instructions, current architecture documentation, and a directory such as `docs/decisions/`. It does not create class folders, archives, indexes, validators, translations, or checksum files without a demonstrated need.
+
+### Decision lifecycle
+
+The method preserves three meanings without forcing particular status words:
+
+| Stage | Meaning |
+|---|---|
+| Working | not delivered yet, partly implemented, or still changing |
+| Current | implementation, direct checks, and current documentation agree |
+| Declined | considered but not adopted; retained only while the reason remains useful |
+
+An `accepted` ADR does not always mean the code has shipped. A decision becomes Current only when implementation, direct checks, and current documentation agree.
+
+Replacement is a relationship between decisions:
+
+- change an unfinished proposal directly;
+- create a new cross-linked record when a delivered decision is reversed;
+- keep both decisions Current when only part of the earlier decision was replaced;
+- consolidate an old decision only after the new record preserves its unique rationale, consequences, verification requirements, and reintroduction conditions.
 
 ## Repository contents
 
@@ -159,18 +140,29 @@ skills/ds-spec-loop/
 └── references/
     ├── acceptance-and-evidence.md
     ├── adoption.md
-    ├── agent-note-lifecycle.md
     ├── decision-classes.md
+    ├── decision-record-lifecycle.md
     ├── documentation-discipline.md
+    ├── requirement-change.md
     ├── simplification.md
     ├── system-of-authority.md
     └── templates.md
 ```
 
-Agents load the compact `SKILL.md` entrypoint first and read only the reference files needed for the current task.
+`SKILL.md` contains the portable core. References load only when the task needs them. `agents/openai.yaml` contains optional Codex-specific metadata, including the default invocation prompt.
 
-## 💬 Contributing
+## 📝 Update log
 
-Ideas, issues, and pull requests are welcome. If something does not work well in your repository, open an Issue and tell us what you were trying to do, which Agent you used, and what happened. That is enough to start the conversation.
+### v0.2 — 2026-08-17
 
-See [NOTICE](NOTICE) for attribution and [LICENSE](LICENSE) for this repository's license.
+Further generalized the Spec programming loop so it can be used in projects with different conventions. The Skill reuses each project's existing Specs, RFCs, ADRs, documentation, testing, and CI conventions, while strengthening rules for mid-development requirement changes, decision ownership, lifecycle transitions, partial replacement, and verification evidence. This update has passed cross-language scenario tests, structural validation, and independent review.
+
+### v0.1 — 2026-08-15
+
+Published the first open-source version, based on Spec programming patterns observed in the public DeepSeek Harness repository. It included the reusable Skill, English and Chinese documentation, and installation instructions for Codex, Claude Code, and GitHub Copilot.
+
+## Contributing
+
+Contributions are welcome. If you find a problem or have a suggestion, please open an Issue with enough context to understand or reproduce it; documentation improvements, usage examples, and focused pull requests are also appreciated.
+
+See [LICENSE](LICENSE) for the project license.

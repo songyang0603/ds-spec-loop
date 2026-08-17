@@ -1,71 +1,75 @@
-# Adopting DS Spec Loop in a repository
+# Adopting the Spec loop in a repository
 
-Adopt the smallest complete authority system that fits the host repository. Reuse existing ADR, RFC, design-doc, docs, test, and CI conventions when they already provide equivalent ownership. Do not create parallel systems merely to copy directory names.
+Map responsibilities onto the host repository before adding files. Portability changes names, paths, commands, and mechanical tooling; it does not weaken the requirement that every non-mechanical change creates or updates one owning decision record.
 
-## Bootstrap layout
+## Responsibility mapping
 
-For a repository with no decision-note convention, start with:
+1. Read repository and subtree instructions.
+2. Locate existing Specs, RFCs, proposals, design docs, ADRs, and decision records.
+3. Locate current architecture, API, package, and user documentation.
+4. Locate focused test commands, real product paths, generated outputs, and complete CI checks.
+5. Assign an existing artifact to each responsibility in [system-of-authority.md](system-of-authority.md).
+6. Report overlaps and gaps before creating a parallel system.
+
+Examples:
+
+| Responsibility | Possible host form |
+|---|---|
+| repository rules | `AGENTS.md`, `CLAUDE.md`, Copilot instructions |
+| working proposal | Spec, RFC, proposal, design doc |
+| stable decision | ADR, decision record, implemented design |
+| current documentation | architecture docs, README, API docs |
+| focused evidence | `pytest`, `cargo test`, `go test`, `pnpm test`, real CLI/UI/API flow |
+| complete checks | GitHub Actions, Makefile, pre-commit, repository scripts |
+
+Never prescribe a command from another ecosystem. Discover commands from the repository's manifests, contributor docs, and CI.
+
+## Reuse before extending
+
+- If existing ADR/RFC conventions cover the responsibility, use them.
+- If ADRs cover only architecture but non-mechanical bug, process, or test decisions lack an owner, propose a small extension to the existing decision policy rather than silently overloading ADRs or creating an unrelated tree.
+- If working proposals and stable decisions are separate files, link them and choose one current rationale owner after delivery.
+- If repository instructions conflict with the Skill, surface the conflict. Do not silently override higher-priority local policy.
+
+## Minimal fallback
+
+Only when no equivalent convention exists, propose a minimal generic structure such as:
 
 ```text
-AGENTS.md
+<repository instruction file>
 docs/
 ├── architecture.md
-└── <subsystem current-state docs>
-.agents/
-└── notes/
+└── decisions/
     ├── README.md
-    ├── proposed/<class>/
-    ├── implemented/<class>/
-    ├── rejected/<class>/
-    └── archived/<class>/
+    └── yyyy-mm-dd-topic.md
 ```
 
-Use the six default classes from [agent-note-lifecycle.md](agent-note-lifecycle.md). Create only directories the repository needs now; version control does not need empty folders.
+Use a status field in each decision record to express proposed, implemented/current, or rejected meaning. Names may change to match the host. Do not pre-create empty class folders, an archive, a generated index, validators, translations, or checksum manifests.
 
-## Root instruction contract
+The fallback decision-policy README defines:
 
-Keep the root instructions short. Include:
-
-- where current architecture and subsystem docs live;
-- where decision notes live and which behavior, contract, structure, process, test-strategy, durable-format, or rationale changes require one;
-- high-value architecture invariants;
-- build, focused test, docs-sync, and full CI commands;
-- the rule that model/user-visible behavior needs evidence through a runnable assembled path;
-- the rule that a proposed note becomes implemented only after source, tests, docs, and evidence converge;
-- pointers to subtree instructions rather than copying their details.
-
-Put package-specific rules in nearer instruction files.
-
-## Note policy
-
-Create `.agents/notes/README.md` as the local contract. Define:
-
-- lifecycle paths and statuses;
-- class set;
-- filename/date convention;
-- proposed, implemented, and rejected skeletons;
-- supersession and consolidation rules;
-- archive policy;
+- when a record is required;
+- lifecycle semantics and host status words;
+- filename convention;
+- working, current, and declined content expectations;
+- replacement and consolidation;
 - link style;
-- any translation or sidecar requirements.
+- historical-retention policy when one becomes necessary.
 
-Do not create a generated central index unless the repository has a real discovery problem that search and directory structure cannot solve.
+## Standing adoption
 
-## Mechanical gates
+For team-wide use, put the strict rule in repository instructions:
 
-Start with conventions and repository-native checks. Add a gate only after a rule is both important and mechanically decidable. Good early candidates are:
+> Every non-mechanical change creates or updates one owning decision record in the same bounded change. Reuse existing decision conventions and update the current implementation, evidence, and documentation together.
 
-- lifecycle path agrees with status;
-- active note links resolve;
-- implemented notes contain no proposal-only headings;
-- generated docs are synchronized;
-- architecture dependency rules are checkable;
-- deleted paths/registrations are absent when a removal note owns that guarantee.
+A user may also invoke the Skill for one bounded change. Do not introduce a lighter method or switch policies task by task.
 
-Prefer a small repository-specific gate over a universal validator. The host repository knows its folders, commands, generated artifacts, and exception policy.
+## Mechanical checks
 
-Do not encode semantic judgment—problem quality, alternative plausibility, user value, or test adequacy—as a boolean format check.
+Use existing repository checks first. Add automation only when a rule is important, mechanically decidable, uncovered, and likely to drift. Good candidates may include link resolution, status-format consistency, generated-reference synchronization, forbidden dependency direction, or absence after removal.
+
+Do not automate semantic judgment such as problem quality, alternative plausibility, user value, or test adequacy.
 
 ## Gradual adoption
 
-Do not rewrite all historical decisions. Apply the system to the next change that affects behavior, contracts, structure, process, test strategy, durable formats, or decision rationale, then repair nearby active authority as work touches it. Preserve existing history. Add automation only when repeated mechanical drift demonstrates its value.
+Do not rewrite all historical decisions. Apply the loop to the next non-mechanical change, repair nearby active authority as work touches it, and preserve existing history. Gradual adoption changes how much history is migrated, not which future changes require an owner.

@@ -2,151 +2,134 @@
 
 [English](README.md) | **简体中文**
 
-> 一个可复用的 Agent Skill，把 DeepSeek Harness 公开仓库中可以观察到的 Spec 编程方法应用到其他软件项目中。
+> 一个供编程 Agent 使用的通用 Spec 编程 Skill。
 
 `ds-spec-loop` 用于帮助编程 Agent 在开发功能、修复 Bug、调整架构或接口、改进测试与开发流程、简化或删除代码时，让需求、决策、实现、测试和文档保持一致。
 
 这里的 Spec 编程不是“先写一份很长的计划再开始编码”，而是把仓库本身作为事实来源：仓库指令记录约束，当前文档描述系统现状，决策记录保留选择某种方案的原因，代码和测试提供可以运行或检查的证据。
 
-## 🧭 方法来源
+## 方法来源
 
-这个 Skill 是一个独立社区项目，方法来源于对 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 公开仓库及其 Git 历史的研究。可以从中观察到的做法包括：
+这个独立社区项目源于对 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 公开仓库和 Git 历史中 Spec 与决策方法的分析。
 
-- 使用仓库级和目录级指令约束 Agent；
-- 用架构文档和包级文档描述当前系统；
-- 使用带有 `proposed`、`implemented`、`rejected`、`superseded` 和 `archived` 状态的决策记录；
-- 沿真实的集成与运行链路完成实现；
-- 把验收条件与直接证据对应起来；
-- 在同一次变更中同步代码、测试、生成产物和文档。
+运行时 Skill 使用通用术语，不要求复制该仓库的目录、框架或测试命令。本项目不是 DeepSeek 官方项目，与 DeepSeek 没有隶属或背书关系，也不分发 DeepSeek Harness 源代码。详见 [NOTICE](NOTICE)。
 
-`ds-spec-loop` 把这些公开可观察的做法整理成可移植的 Agent Skill。它不是 DeepSeek 官方项目，也没有获得 DeepSeek 背书，并且不分发 DeepSeek Harness 的源代码。
+## 🚀 安装与使用
 
-## ✨ Skill 能做什么
+### Community Skills CLI
 
-| 功能 | Agent 会做什么 |
-| --- | --- |
-| 修改前理解仓库 | 阅读适用的仓库指令、当前文档、已有决策、相关源码、测试和生成文件；必要时查看 Git 历史 |
-| 维护决策记录 | 创建或更新负责当前决定的记录，并在实现、否决、替换或归档时保持生命周期准确 |
-| 编写可验证的验收条件 | 把每项要求与可观察行为、可能失败的位置，以及能够确认或否定完成状态的证据对应起来 |
-| 完成整条集成链路 | 根据项目实际结构检查定义、provider、注册或加载、consumer、持久化，以及面向用户或模型的行为 |
-| 保持仓库内容一致 | 同步更新受影响的代码、公共接口、测试、快照、生成产物、当前文档和决策理由 |
-| 支持简化与删除 | 调查真实使用方，并清理已经无效的注册项、export、文件、测试、文档和兼容层，而不是只删除主要源码 |
-| 只读审查 | 在不修改文件的情况下，比较当前决策、源码、测试、生成产物和文档是否一致 |
-| 适配已有规范 | 复用仓库已有的 ADR、RFC、设计文档或 Spec 体系，不另建一套相互竞争的文档结构 |
-
-它适用于功能开发、Bug 修复、API 或配置变化、架构调整、测试策略变化、开发流程变化、代码删除，以及 Spec 与代码一致性审查。拼写修正、纯格式调整等局部机械修改通常不需要使用这个 Skill。
-
-## 🚀 快速开始
-
-使用社区维护的跨 Agent [`skills`](https://skills.sh/) CLI 安装：
+社区维护的 [`skills`](https://skills.sh/) 安装器需要 Node.js，并会让你选择目标编程 Agent 和安装范围：
 
 ```bash
 npx skills add songyang0603/ds-spec-loop
 ```
-
-然后在 Codex 中调用：
-
-```text
-使用 $ds-spec-loop 实现这个功能。
-修改前先检查仓库指令、当前文档、已有决策、相关源码、测试和真实集成链路。
-完成后让决策记录、实现、验证证据和文档保持一致。
-```
-
-不同宿主的显式调用方式不同：
-
-| 宿主 | 调用方式 |
-| --- | --- |
-| Codex | `$ds-spec-loop` |
-| Claude Code | `/ds-spec-loop` |
-| GitHub Copilot CLI | `/ds-spec-loop` |
-| 其他兼容 Agent | 使用该宿主规定的 Skill 调用方式，或直接点名 `ds-spec-loop` |
-
-### 常见用法
-
-只写 Spec，不实现：
-
-```text
-使用 $ds-spec-loop 调查这个改动并编写 proposed 决策记录，不要实现。
-请独立于首选方案描述问题，比较真实可行的替代方案，并为验收条件注明直接证据。
-```
-
-继续已有 proposal：
-
-```text
-使用 $ds-spec-loop 继续已有的 proposed 决策，完成实现、测试和文档更新，
-并在证据与实际结果一致后更新决策记录的状态。
-```
-
-只读审查一致性：
-
-```text
-使用 $ds-spec-loop 检查当前决策、源码、公共接口、测试、生成产物和当前文档
-是否一致。不要修改任何文件。
-```
-
-简化或删除代码：
-
-```text
-使用 $ds-spec-loop 调查这段代码的真实使用方并规划删除。
-如果确认可以删除，请修改完整集成链路，并检查旧文件、注册项、export、测试和文档
-是否已经清理干净。
-```
-
-用户指定的任务边界始终有效：只读审查不会变成修改，只写 Spec 也不会被擅自扩展成实现。在 Claude Code 或 GitHub Copilot CLI 中，请把 `$ds-spec-loop` 替换为 `/ds-spec-loop`。
-
-## 🧩 工作原理
-
-Skill 把 Spec 看作仓库中一组相互关联的记录：
-
-```text
-仓库指令 + 当前文档 + 决策记录
-                ↕
-源码 + 类型 + 配置 + 实际集成链路
-                ↕
-测试 + 可运行行为 + 生成产物
-```
-
-- **当前文档**说明仓库现在如何工作。
-- **决策记录**说明某项决定为什么被提出、接受、否决、替换或保留。
-- **源码和公共接口**落实这些决定。
-- **测试和可运行链路**为可观察行为提供证据。
-- **仓库专用检查**约束能够被程序直接判断的事实。
-
-Agent 只更新本次任务真正影响到的记录。格式检查通过不等于 Spec 与实现语义一致，修改了一个模块也不等于功能已经接入完整系统。
-
-## 📦 安装
-
-[Agent Skills 开放规范](https://agentskills.io/specification)统一的是可移植 `SKILL.md` 包格式；发现目录与调用语法仍由各宿主决定。
-
-### 跨 Agent 安装器
-
-```bash
-npx skills add songyang0603/ds-spec-loop
-```
-
-安装器会找到 `skills/ds-spec-loop/SKILL.md`，并让你选择目标 Agent 和安装范围。
 
 ### GitHub CLI
-
-GitHub CLI 也提供预览版 Agent Skills 安装器：
 
 ```bash
 gh skill install songyang0603/ds-spec-loop ds-spec-loop --agent codex --scope user
 ```
 
-如需安装给 Claude Code 或 GitHub Copilot，请把 `codex` 替换为 `claude-code` 或 `github-copilot`。
+按需将 `codex` 替换为 `claude-code` 或 `github-copilot`。
 
 ### 手动安装
 
-Clone 本仓库，然后把 `skills/ds-spec-loop` 复制到 Agent 支持的发现目录：
+Clone 或下载本仓库，然后复制完整的 `skills/ds-spec-loop` 目录：
 
 | 宿主 | 用户级目录 | 仓库级目录 |
-| --- | --- | --- |
+|---|---|---|
 | Codex | `~/.agents/skills/ds-spec-loop` | `.agents/skills/ds-spec-loop` |
 | Claude Code | `~/.claude/skills/ds-spec-loop` | `.claude/skills/ds-spec-loop` |
-| GitHub Copilot CLI | `~/.copilot/skills/ds-spec-loop` 或 `~/.agents/skills/ds-spec-loop` | `.github/skills/ds-spec-loop` 或 `.agents/skills/ds-spec-loop` |
+| GitHub Copilot | `~/.copilot/skills/ds-spec-loop` 或 `~/.agents/skills/ds-spec-loop` | `.github/skills/ds-spec-loop`、`.claude/skills/ds-spec-loop` 或 `.agents/skills/ds-spec-loop` |
 
-Codex 和 Claude Code 的官方文档也明确支持链接 Skill 目录。对于 GitHub Copilot CLI，请使用复制或其文档规定的目录注册机制。发现机制的最新细节请参考 [Codex](https://developers.openai.com/codex/skills/)、[Claude Code](https://code.claude.com/docs/en/skills) 与 [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills) 官方文档。
+最新行为请参考 [Codex](https://learn.chatgpt.com/docs/build-skills)、[Claude Code](https://code.claude.com/docs/en/skills) 和 [GitHub Copilot](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills) 官方文档。
+
+### 调用 Skill
+
+| 宿主 | 命令 |
+|---|---|
+| Codex | `$ds-spec-loop` |
+| Claude Code | `/ds-spec-loop` |
+| GitHub Copilot CLI | `/ds-spec-loop` |
+
+下面的示例使用 Codex 语法。在 Claude Code 或 GitHub Copilot CLI 中，请把 `$ds-spec-loop` 替换为 `/ds-spec-loop`。
+
+实现一个变更：
+
+```text
+使用 $ds-spec-loop 实现这个变更。
+复用仓库已有的决策、文档、测试和 CI 规范，并保持它们一致。
+```
+
+只写工作提案，不实现：
+
+```text
+使用 $ds-spec-loop 调查这个变更并编写工作提案，不要实现。
+比较真实可行的替代方案，并为每项验收条件注明直接检查方式。
+```
+
+只读检查：
+
+```text
+使用 $ds-spec-loop 检查提案、决策、代码、测试、生成文件和当前文档
+是否一致。不要修改文件。
+```
+
+用户指定的任务边界始终有效：只读检查不会变成修改，只写提案也不会被自动扩展成实现。
+
+## ✨ 功能
+
+| 功能 | Agent 会做什么 |
+|---|---|
+| 识别仓库现有规范 | 读取适用的仓库指令、提案、决策、当前文档、源码、测试、生成文件、CI 和相关 Git 历史 |
+| 复用一份决策记录 | 优先更新已经负责该变更的记录；没有记录时才建立一份范围明确的新记录 |
+| 编写可测试的验收条件 | 说明应该看到什么结果、哪里可能失败，以及哪个直接检查可以否定“已经完成” |
+| 检查受影响的完整调用路径 | 确认修改后的代码真正连接到调用方、运行时、持久化或用户可见结果 |
+| 处理需求变化 | 交付前直接修改未完成的提案；已交付决策被反转时才建立替换记录 |
+| 保持仓库内容一致 | 在同一个 PR 或一组关联变更中，同步更新决策、代码、测试、生成文件、公共契约和当前文档 |
+| 完整删除代码 | 检查真实消费者，并清理旧代码、注册、导出项、配置、测试、文档和兼容行为 |
+
+核心规则是：
+
+> 每个非机械变更都必须创建或更新一份负责该变更的决策记录。
+
+只有不改变行为、契约、结构、流程、测试策略、存储数据格式或理由的拼写、纯格式调整等局部机械编辑可以豁免。
+
+## 🧭 工作方式
+
+Skill 不要求所有仓库使用同一套目录。它会先查找当前仓库已经用什么文件承担下面的职责。
+
+| 通用职责 | 常见形式 |
+|---|---|
+| 仓库工作规则 | `AGENTS.md`、`CLAUDE.md`、Copilot instructions |
+| 尚未完成的决策 | Spec、RFC、工作提案、design doc、ADR 草案 |
+| 当前决策 | ADR、决策记录、已实施的设计文档、已交付的 RFC |
+| 当前系统说明 | architecture docs、README、API 或 package docs |
+| 局部检查 | `pytest`、`cargo test`、`go test`、`pnpm test`、真实 CLI/UI/API 检查 |
+| 完整检查 | GitHub Actions、Makefile、pre-commit、仓库脚本 |
+
+Python 项目不会被要求运行 `pnpm test`。已经使用 ADR 的仓库也不会被要求再建立一套决策目录。
+
+只有不存在同等规范时，Skill 才会建议一个最小结构，例如仓库指令、当前架构文档和 `docs/decisions/`。它不会在没有实际需要时创建分类目录、archive、索引、validator、翻译或 checksum 文件。
+
+### 决策生命周期
+
+这套方法保留三个含义，但不强制使用某几个状态词：
+
+| 阶段 | 含义 |
+|---|---|
+| Working | 尚未交付、只完成一部分或仍在修改 |
+| Current | 实现、直接检查和当前文档已经一致 |
+| Declined | 经过评估但没有采用；只有拒绝理由仍然有用时才保留 |
+
+有些仓库的 `accepted ADR` 只表示已经批准，并不表示代码已经交付。只有实现、检查结果和当前文档都一致后，该决策在本方法中才属于 Current。
+
+替换关系（replacement）是两项决策之间的关系：
+
+- 尚未完成的提案直接修改；
+- 已交付决策被反转时创建带交叉链接的新决策记录；
+- 只替换一部分时，两个决策都继续处于 Current 状态，并注明各自负责的范围；
+- 只有新记录保存了旧决策的独有理由、后果、验证要求和重新引入条件，才允许完全合并旧记录。
 
 ## 仓库结构
 
@@ -157,18 +140,29 @@ skills/ds-spec-loop/
 └── references/
     ├── acceptance-and-evidence.md
     ├── adoption.md
-    ├── agent-note-lifecycle.md
     ├── decision-classes.md
+    ├── decision-record-lifecycle.md
     ├── documentation-discipline.md
+    ├── requirement-change.md
     ├── simplification.md
     ├── system-of-authority.md
     └── templates.md
 ```
 
-Agent 会先加载简洁的 `SKILL.md` 入口，再根据当前任务读取需要的 reference，避免占用不必要的上下文。
+`SKILL.md` 保存跨宿主的核心流程。只有任务需要时才会读取 reference。`agents/openai.yaml` 保存可选的 Codex 专用 metadata，包括默认调用提示。
 
-## 💬 参与贡献
+## 📝 更新日志
 
-欢迎分享想法、提交 Issue 或 Pull Request。如果它在你的仓库里表现得不够好，可以简单说说你原本想做什么、使用了哪个 Agent，以及实际发生了什么，我们可以从这里一起继续完善。
+### v0.2 — 2026-08-17
 
-归属说明见 [NOTICE](NOTICE)，本仓库许可见 [LICENSE](LICENSE)。
+将 Spec 编程闭环进一步通用化，使其能够用于采用不同规范的项目。Skill 能够复用不同项目已有的 Spec、RFC、ADR、文档、测试和 CI 规范，同时完善需求中途变化、决策归属、生命周期转换、局部替换和验证证据等规则。本次更新已通过跨语言场景测试、结构校验和独立审查。
+
+### v0.1 — 2026-08-15
+
+发布首个开源版本，将 DeepSeek Harness 公开仓库中可以观察到的 Spec 编程方法整理为可复用的 Agent Skill。这个版本提供中英文说明，以及 Codex、Claude Code 和 GitHub Copilot 的安装方式。
+
+## 参与贡献
+
+欢迎参与完善 `ds-spec-loop`。如果你发现问题或有改进建议，可以提交 Issue 并附上便于理解或复现的背景；也欢迎补充文档、使用案例或提交范围清晰的 Pull Request。
+
+许可信息见 [LICENSE](LICENSE)。

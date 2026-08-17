@@ -1,50 +1,47 @@
-# Copy-ready artifact templates
+# Generic artifact templates
 
-Adapt paths and terms to the host repository. These templates encode the lifecycle semantics; they are not a substitute for repository investigation.
+Use the host repository's established formats first. These are fallback semantic templates, not mandatory filenames, headings, statuses, or directories.
 
-## Proposed Agent Note
+## Working proposal
 
 ```markdown
-# Agent Note: <decision title>
+# Proposal: <decision title>
 
 Status: proposed
 
 ## Problem
 
-<Describe the user, model, maintainer, or system problem without assuming the solution.>
+<Describe the user, maintainer, operator, or system problem without assuming the solution.>
 
 ## Proposal
 
-<State the intended decision, ownership boundary, assembled path, and migration if any.>
+<State the intended decision, ownership, real consumer path, and migration if any.>
 
-## <Bespoke technical section, if needed>
+## <Technical detail, if needed>
 
-<Topology, protocol, schema, invariants, lifecycle, or compatibility details.>
+<Topology, protocol, schema, invariants, lifecycle, or compatibility.>
 
 ## Alternatives considered
 
-**<Real alternative>.** <Why it loses under the stated problem and constraints.>
-
-**<Another real alternative>.** <Why it loses.>
+**<Real alternative>.** <Why it loses under the stated constraints.>
 
 ## Acceptance criteria
 
-- <Observable behavior or absence, including the real assembled path.>
+- <Observable behavior or absence through the real consumer path.>
 - <Failure, cleanup, durability, compatibility, or negative guarantee.>
-- <Current-state docs and generated surfaces agree with the shipped contract.>
+- <Current docs and generated surfaces agree with the delivered contract.>
 
 ## Risks
 
-- <Likely failure mode and mitigation or evidence.>
-- <Capability, flexibility, or compatibility knowingly given up.>
+- <Likely failure and matching evidence.>
+- <Capability, flexibility, or compatibility knowingly surrendered.>
 ```
+## Stable decision
 
-## Implemented Agent Note
-
-Rewrite; do not merely rename headings.
+Rewrite the proposal; do not merely rename headings.
 
 ```markdown
-# Agent Note: <decision title>
+# Decision: <decision title>
 
 Status: implemented
 
@@ -56,77 +53,82 @@ Status: implemented
 
 <Describe what the repository now does, in present tense, with current paths and names.>
 
-## <Bespoke technical section, if still useful>
+## <Technical detail, if still useful>
 
-<Current topology, protocol, schema, invariants, or compatibility facts.>
+<Current topology, protocol, schema, invariants, or compatibility.>
 
 ## Alternatives considered
 
-**<Alternative>.** <Why the shipped decision wins.>
+**<Alternative>.** <Why the current decision wins.>
 
 ## Consequences
 
-<What the decision buys, costs, forbids, removes, or leaves intentionally deferred.>
+<What the decision buys, costs, forbids, removes, or leaves deferred.>
 
-## Testing / Verification
+## Verification
 
-- `<exact command>` — <actual outcome and acceptance claim covered>.
-- <Static or runtime evidence with exact repository locations>.
+- `<exact command or runtime path>` — <actual outcome and covered claim>.
 - Not run: <check and missing condition>, if applicable.
 ```
 
-## Rejected Agent Note
+## Declined proposal
 
 ```markdown
-# Agent Note: <decision title>
+# Proposal: <decision title>
 
 Status: rejected — <concise verdict>
 
 ## Problem
-
-<Problem that motivated evaluation.>
-
 ## Proposal
-
-<Proposal as evaluated.>
-
 ## Alternatives considered
-
-**<Alternative>.** <Trade-off.>
-
 ## Acceptance criteria
-
-<Preserve proposal-time criteria if useful to understand the evaluation.>
-
 ## Risks
-
-<Preserve proposal-time risks.>
 ```
 
-## Change delivery summary
+Retain only while the verdict prevents a plausible repeated mistake.
+
+## Requirement delta
+
+```markdown
+| Item | Previous accepted state | New accepted state | Disposition |
+|---|---|---|---|
+| Outcome / non-goal | ... | ... | keep / replace / withdraw / add |
+| Acceptance | ... | ... | keep / replace / withdraw / add |
+| Source / contract | ... | ... | retain / revise / remove |
+| Tests / evidence | ... | ... | retain / revise / remove |
+| Current docs | ... | ... | retain / revise / remove |
+| Rationale | ... | ... | living revision / stable replacement |
+```
+
+## Delivery summary
 
 ```markdown
 ## Outcome
 
 <What is now true.>
 
-## Decision lifecycle
+## Decision ownership
 
-- Owning note: `<path>`
-- Transition: `<created proposed | proposed → implemented | proposed → rejected | updated implemented | superseded>`
+- Owner: `<path or identifier>`
+- Lifecycle: `<created proposal | updated proposal | accepted current decision | rejected>`
+- Relationship: `<none | replaces | partially replaces | consolidates>`
 
 ## Authority surfaces changed
 
 - Source/contracts: <paths>
 - Executable evidence: <paths>
-- Current-state docs/generated references: <paths>
+- Current docs/generated references: <paths>
 
 ## Verification
 
 - `<command>` — <actual outcome>
 - Not run: <check and reason>
 
-## Remaining proposed or blocked work
+## Requirement delta
 
-- <Only real remaining work; omit if none.>
+- <Withdrawn, replaced, or newly authorized requirement; omit if none.>
+
+## Remaining work
+
+- <Only real proposed or blocked work; omit if none.>
 ```

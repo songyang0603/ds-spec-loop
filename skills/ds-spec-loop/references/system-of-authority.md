@@ -1,61 +1,50 @@
 # Repository authority system
 
-DS Spec Loop uses a distributed specification. Each artifact answers a different question; overlap is acceptable only when ownership remains clear.
+A repository-native Spec is distributed across artifacts that answer different questions. Reuse the host repository's existing owners before adding anything.
 
-## Artifact ownership
+## Artifact responsibilities
 
-| Artifact | Owns | Must not become |
+| Responsibility | Possible repository forms | Owns | Must not become |
+|---|---|---|---|
+| Repository instructions | `AGENTS.md`, `CLAUDE.md`, Copilot instructions, contributor rules | durable rules, commands, architecture invariants, context map | task diary or full design history |
+| Working proposal | Spec, RFC, proposal, design doc, draft ADR | problem, candidate direction, alternatives, acceptance, risks | a claim that unfinished work is current |
+| Stable decision | ADR, decision record, implemented design, accepted-and-shipped RFC | why the current decision won, alternatives, consequences, verification obligations | API manual, migration checklist, future plan |
+| Declined proposal | rejected RFC, declined proposal, rejected decision | evaluated direction and reason it lost | current contract |
+| Historical record | archive, history, frozen decisions, Git | past rationale and chronology | current authority |
+| Current documentation | architecture docs, README, API/package/user docs | current topology, public behavior, usage, ownership | proposal history or unbuilt wishes |
+| Executable system | source, types, config, manifests, schemas | actual behavior, structure, public contract | the only explanation of why |
+| Executable evidence | unit/integration/e2e tests, examples, replay, snapshots, smoke tests | observable promises, regressions, negative guarantees | complete decision rationale |
+| Generated reference | generated API docs, catalogs, schema docs | exhaustive current inventory derived from a source owner | hand-edited parallel truth |
+| Mechanical checks | project scripts, Makefile, pre-commit, CI | facts a program can decide | product value or semantic correctness |
+| Intake and delivery | Issue, PR, commit, release note | task boundary, collaboration, chronology, delivery summary | permanent architecture authority |
+| Reusable procedure | repository-local Skill, script, contributor guide | how an agent repeats a workflow | runtime contract or completion evidence |
+
+## Map owners before editing
+
+For each mutable fact, identify one canonical home and the surfaces that depend on it:
+
+| Fact | Canonical owner | Dependent surfaces |
 |---|---|---|
-| Root and subtree agent instructions | Durable rules, architecture invariants, commands, scope map | A task diary or giant design document |
-| Architecture and subsystem docs | Current system map, public contracts, ownership, composition | Proposal history or unbuilt wishes |
-| Proposed Agent Note | Problem, candidate decision, alternatives, acceptance, risks | A claim that work shipped |
-| Implemented Agent Note | Shipped decision, rejected alternatives, consequences, current factual locations | A migration checklist or future plan |
-| Rejected Agent Note | Evaluated proposal and the reason it lost | Current contract |
-| Archived Agent Note | Frozen historical rationale | Current authority |
-| Source, types, config, manifests | Executable structure and contract | The only explanation of why |
-| Tests, snapshots, runnable examples | Observable behavior and regressions | Complete decision rationale |
-| Generated references | Mechanically derived current inventory | A hand-edited parallel truth |
-| Gates and CI | Mechanically decidable invariants | Proof of product or semantic correctness |
-| Issue/PR | Work intake and delivery summary | Permanent architecture authority |
-| Repository-local Skill | Repeatable agent procedure | Runtime contract or completion evidence |
+| Current caller behavior | public contract and current docs | examples and tests |
+| Design rationale | owning stable decision | short references elsewhere |
+| Observable promise | acceptance and executable evidence | delivery summary |
+| Exhaustive inventory | source or generator | generated reference |
 
-## One home for each fact
+Updating all affected authorities does not mean copying the same volatile details into every file. Update each artifact only for the question it owns.
 
-Assign a canonical home before editing:
+## Resolve disagreement
 
-- “What can callers rely on now?” belongs in public types and current-state docs.
-- “Why this design instead of another?” belongs in an active implemented note.
-- “What would prove this behavior?” belongs in acceptance language and executable evidence.
-- “How should an agent perform this recurring task?” belongs in instructions or a Skill.
-- “What was considered and declined?” belongs in a rejected or still-active decision note.
+When artifacts conflict:
 
-Other artifacts may link to the owner or summarize it briefly. Do not maintain two independent detailed copies.
+1. read governing repository instructions;
+2. identify the public contract and real consumer path;
+3. run or inspect the closest executable evidence;
+4. read the active owning proposal or decision for intent and rationale;
+5. inspect Git, declined proposals, and historical records;
+6. surface the contradiction and repair every current authority in the same bounded change.
 
-## Authority precedence
-
-When artifacts disagree, do not silently choose the most convenient one. Use this investigation order:
-
-1. Read the governing repository instructions.
-2. Identify the public contract and actual assembled runtime path.
-3. Run or inspect the closest executable evidence.
-4. Read the active owning decision note for rationale.
-5. Read Git history, rejected notes, and archive for historical explanation.
-6. Surface the contradiction and repair every current authority in the same change.
-
-Code can reveal what exists, but not always what is intended. A note can reveal intent, but not prove that the runtime still follows it. Current truth requires both.
-
-## Current-state convergence
-
-A change that affects behavior, contracts, structure, process, test strategy, durable formats, or decision rationale is not converged until all changed facts have one current owner and all dependent summaries agree. Typical drift checks include:
-
-- note paths and names match the tree;
-- README examples match public types and defaults;
-- registrations and generated catalogs expose the same surface;
-- tests exercise supported behavior rather than deleted compatibility;
-- instructions name commands and directories that still exist;
-- proposed notes do not describe already-shipped work;
-- implemented notes do not promise unbuilt work.
+Code shows what exists but not always what was intended. A decision record explains intent but does not prove runtime behavior. Current truth requires the relevant owners to agree.
 
 ## Progressive repository context
 
-Keep root instructions short and navigational. Put detailed rules close to the subtree they govern. Agents should read the root, then progressively load only relevant subsystem instructions, current docs, notes, and tests. This keeps the repository legible without reducing the spec to a single oversized file.
+Keep root instructions short and navigational. Put detailed rules close to the subtree they govern. Load only the instructions, current docs, decisions, source, and evidence relevant to the task.

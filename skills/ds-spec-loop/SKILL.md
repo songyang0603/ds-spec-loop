@@ -1,147 +1,169 @@
 ---
 name: ds-spec-loop
-description: Run a complete repository-native, spec-anchored development loop inspired by DeepSeek Harness. Use for feature development, bug fixes, simplification, architecture, process, or testing work that changes behavior, contracts, structure, test strategy, durable formats, or decision rationale; when asked to write, review, continue, implement, reject, supersede, archive, or verify a spec/Agent Note/RFC/ADR; or when code, tests, current-state docs, and decision rationale must converge in one change. Also use for read-only spec-to-code drift checks. Do not create a spec for a purely mechanical local edit that changes none of those things.
+description: Run a strict repository-native Spec programming loop that keeps requirements, owning decisions, implementation, tests, and current documentation consistent in one bounded change. Use when explicitly invoked; when repository instructions require a Spec, RFC, ADR, proposal, design doc, or decision record for non-mechanical changes; when implementing, revising, rejecting, replacing, retiring, simplifying, or verifying such a decision; or when auditing Spec-to-code drift. Do not use for a purely mechanical or local edit that changes no behavior, contract, structure, process, test strategy, durable format, or rationale.
 ---
 
-# DS Spec Loop
+# Repository-native Spec loop
 
-Treat the spec as a repository-wide authority system, not one planning document. Keep six surfaces coherent:
+Treat the Spec as a distributed repository authority system, not one planning document. Keep these responsibilities coherent:
 
 - repository instructions and architecture invariants;
-- current-state documentation and public contracts;
-- lifecycle-managed decision notes;
-- source, types, package topology, configuration, and generated artifacts;
+- working proposals and stable decision rationale;
+- current documentation and public contracts;
+- source, types, configuration, package topology, and generated artifacts;
 - executable evidence such as unit, integration, replay, snapshot, and end-to-end tests;
-- mechanical gates for facts a program can decide.
+- repository checks and CI for facts a program can decide;
+- Git and change-review history for chronology.
 
 Preserve the user's requested boundary. `specify only`, `verify only`, `review`, `implement`, and `simplify` are different assignments. Do not silently turn one into another.
 
+Preserve the strict loop across repositories. Adapt names, paths, commands, and mechanical checks to the host repository; do not weaken the rule that every non-mechanical change creates or updates one owning decision record.
+
 ## Load the relevant reference
 
-- Read [system-of-authority.md](references/system-of-authority.md) before changing a repository's spec system or deciding which artifact owns a fact.
-- Read [agent-note-lifecycle.md](references/agent-note-lifecycle.md) whenever creating, moving, superseding, rejecting, or archiving a decision note.
-- Read [decision-classes.md](references/decision-classes.md) for the class-specific content and evidence expected from feature, bug-fix, simplification, architecture, process, or testing decisions.
-- Read [acceptance-and-evidence.md](references/acceptance-and-evidence.md) before writing acceptance criteria, implementing a spec, or verifying completion.
-- Read [simplification.md](references/simplification.md) for removal, consolidation, replacement, or “clean up” work.
-- Read [documentation-discipline.md](references/documentation-discipline.md) when adding or restructuring instructions, current-state docs, references, generated docs, or archive policy.
-- Read [adoption.md](references/adoption.md) when installing this method into a repository that has no equivalent conventions.
-- Use [templates.md](references/templates.md) when authoring repository artifacts. Adapt names and paths to existing repository conventions.
+- Read [system-of-authority.md](references/system-of-authority.md) before deciding which artifact owns a fact or changing a repository's Spec system.
+- Read [decision-record-lifecycle.md](references/decision-record-lifecycle.md) when creating, accepting, rejecting, replacing, consolidating, retiring, or archiving a decision.
+- Read [requirement-change.md](references/requirement-change.md) when a user correction, review finding, failed premise, measurement, or implementation discovery changes the accepted direction.
+- Read [decision-classes.md](references/decision-classes.md) for class-specific investigation and evidence.
+- Read [acceptance-and-evidence.md](references/acceptance-and-evidence.md) before writing acceptance criteria, implementing a proposal, or verifying completion.
+- Read [simplification.md](references/simplification.md) for removal, consolidation, replacement, or cleanup work.
+- Read [documentation-discipline.md](references/documentation-discipline.md) when adding or restructuring instructions, current docs, references, generated docs, or historical records.
+- Read [adoption.md](references/adoption.md) when a repository has no equivalent conventions or wants this loop as a standing rule.
+- Use [templates.md](references/templates.md) only when the repository has no equivalent templates.
 
 ## Reconstruct repository authority first
 
-1. Read the root instructions, then every more-specific instruction file governing the target subtree.
-2. Map the relevant current-state documents, public types/contracts, source entry points, assembly/composition path, tests, generated outputs, and gates.
-3. Search active proposed, implemented, and rejected decision records before creating one. Find the note that already owns the decision; update it instead of duplicating it.
-4. Treat archived records and Git history as historical evidence, not present authority.
-5. Inspect history when the current tree cannot explain intent, rejected alternatives, a first-proposed date, or a suspected drift.
-6. State unresolved contradictions before building on them. Prefer direct repository evidence over issue prose or stale plans.
+1. Read the root repository instructions, then every more-specific instruction file governing the target subtree.
+2. Reconstruct the requested outcome, explicit non-goals, and unresolved product or architecture choices. Ask before freezing a direction when a missing choice materially changes the result.
+3. Map the relevant working proposals, stable decisions, current docs, public contracts, source entry points, real composition path, tests, generated outputs, and repository checks.
+4. Search existing Spec, RFC, proposal, design-doc, ADR, and decision-record conventions before creating anything. Reuse the repository's names and lifecycle.
+5. Find the record that already owns the decision. Update it instead of creating a parallel record.
+6. Assign one canonical home to every mutable fact. Other surfaces may summarize or link; they do not become independent detailed copies.
+7. Treat historical records and Git history as context, not present authority.
+8. State unresolved contradictions before building on them. Prefer direct repository evidence over stale plans or issue prose.
 
-Do not begin from a preferred implementation. First write a problem statement that remains true if the preferred solution is removed.
+Do not begin from a preferred implementation. First state a problem that remains true if the preferred solution is removed.
 
-## Decide whether the change needs an Agent Note
+## Cover every non-mechanical change
 
-Create or update a note in the same change whenever work alters behavior, architecture, a cross-file or cross-package contract, tooling/process, test strategy, durable/on-disk/wire/configuration format, or a decision maintainers may revisit.
+Create or update one owning decision record in the same PR or bounded change whenever work alters behavior, architecture, a contract shared across files or packages, tooling/process, test strategy, durable/on-disk/wire/configuration format, or another decision a maintainer may reasonably revisit.
 
-Exempt only purely mechanical or local edits with no change to behavior, contract, structure, process, test strategy, or rationale. Do not use effort, diff size, or file count as the discriminator.
+Exempt only a purely mechanical or local edit with no change to behavior, contract, structure, process, test strategy, durable format, or rationale. Do not use effort, diff size, elapsed time, or file count as the discriminator.
 
-Classify the owning decision as exactly one of:
+Use the host repository's established decision classes. If none exist, choose one primary class from [decision-classes.md](references/decision-classes.md). Classification identifies the decision and likely failure surfaces; it does not require a particular directory tree.
 
-- `feature`: new user- or model-facing capability;
-- `bug-fix`: defect correction or postmortem gap closure;
-- `simplification`: removal of code, behavior, or surface area without adding a capability;
-- `architecture`: structural decision about shipped source and runtime boundaries;
-- `process`: tooling, policy, or workflow around the code;
-- `testing`: test infrastructure or test strategy.
+Before creating a new record, prove that no active record already owns the decision. When an owner exists, create a separate record only for an independently revisitable problem with its own real alternatives, consequences, or stable contract. When no record or equivalent contract artifact owns a non-mechanical correction, create a narrowly scoped bug-fix decision owner. A changed file, module, implementation phase, test layer, follow-up fix, or release step is not automatically a separate decision.
 
-Use the host repository's established names if it already has an equivalent taxonomy. Otherwise follow [adoption.md](references/adoption.md).
+## Establish the owning proposal or decision
 
-After classifying, apply the class-specific investigation and evidence requirements in [decision-classes.md](references/decision-classes.md). Classification is not only a folder name; it identifies the durable decision and the most likely failure surfaces.
-
-## Establish the owning decision
-
-For substantial future work, create or repair a proposed note before implementation. Record:
+For substantial future work, create or repair a working proposal before implementation. Record:
 
 - a solution-independent problem;
-- the proposed decision and affected ownership boundaries;
+- the proposed direction and affected ownership boundaries;
 - genuine alternatives and why they lose;
 - observable acceptance criteria;
 - risks, trade-offs, and intentionally surrendered capability.
 
-For a decision already shipped in the same small change, an implemented note may be created directly. Do not mislabel partial work as implemented.
+For a small decision already made in the same bounded change, create or update the stable decision record directly if the repository's convention allows it. Do not describe partial work as current behavior.
 
-Keep one owning note per decision. A note may contain bespoke technical sections—topology, protocol, schema, invariants, migration—but the lifecycle skeleton remains intact. Do not invent fake alternatives to satisfy a heading; investigate the record or say what evidence is unavailable.
+Keep one owner per decision. Add bespoke technical sections only when the decision needs topology, protocol, schema, invariants, migration, or compatibility detail. Do not invent alternatives to satisfy a template; investigate the record or state that the evidence is unavailable.
 
-## Bind acceptance to falsifying evidence
+When an outcome is empirically unknown, do not fabricate the final decision in advance. Record the problem, candidate direction, observation method, acceptance boundary, and stopping condition; run the bounded experiment; then write the stable decision from the observed result.
+
+## Handle changed requirements and discoveries
+
+Before continuing after a correction or discovery, read [requirement-change.md](references/requirement-change.md) and reconcile the delta.
+
+- Inside one uncompleted PR or change stack, revise the living proposal rather than creating a permanent replacement chain.
+- Identify which outcomes and acceptance criteria remain, change, or are withdrawn.
+- Classify existing code, tests, and docs as retained, revised, removed, or historical.
+- Ask the decision owner before accepting a new external dependency, recurring cost, privacy exposure, compatibility loss, product direction, or other material trade-off not already authorized by repository policy.
+- After a stable decision has shipped, create a new replacement decision and cross-link it; never rewrite history as though the earlier decision never existed.
+
+## Bind acceptance to direct evidence
 
 For every acceptance statement, identify:
 
 1. the observable behavior or absence that would make it true;
 2. the layer where it can fail;
 3. the direct evidence that can falsify it;
-4. the exact command, inspection, or runtime path used to obtain that evidence.
+4. the exact repository-native command, inspection, or runtime path used to obtain that evidence.
 
 Match evidence to the failure surface:
 
-- local logic and invariants → unit tests;
-- provider/loader/package composition → integration or composition tests;
+- local logic and invariants → focused unit tests;
+- package, service, loader, or runtime composition → integration or composition tests;
 - persistence, recovery, or event reconstruction → replay/resume tests;
-- model- or user-visible behavior → runnable example plus stable snapshot;
-- external service behavior → real end-to-end test when access exists, otherwise an explicit unverified boundary;
-- deletion → negative search, absent path/registration/manifest/catalog/reference, and preserved replacement behavior;
-- documentation or generated-reference promises → repository-native sync checks;
-- architectural dependency direction → manifest/import/topology checks.
+- user- or model-visible behavior → the real runnable product path and stable output evidence;
+- external service behavior → real end-to-end evidence when access exists, otherwise an explicit unverified boundary;
+- deletion → negative search plus absence from source, exports, registration, manifests, docs, tests, and durable formats;
+- documentation or generated-reference promises → the repository's own synchronization checks;
+- dependency direction → manifest, import, or topology checks.
 
-Static source inspection is evidence about source, not proof of runtime behavior. A passing format gate is evidence about encoded format rules, not semantic agreement between spec and implementation.
+Static source inspection is evidence about source, not proof of runtime behavior. A passing format check proves only the encoded format rule, not semantic agreement.
 
-## Change the complete assembled path
+Use the smallest direct evidence set that covers the changed claims. Do not add a validator, benchmark, replay system, snapshot framework, or synthetic evaluation merely to make the change look rigorous. Add deterministic automation only when an important mechanically decidable rule lacks an existing owner and is likely to drift.
 
-Implement through the repository's actual composition path, not only a leaf module. Trace definition, provider, registration/loader, consumer, persistence, and UI/model exposure where they exist.
+## Change the complete consumer path
 
-In the same change, update every authority surface whose fact changed:
+Implement through the repository's real composition path, not only a leaf module. Trace the applicable chain:
 
-- source and public types/contracts;
+```text
+public contract → implementation/provider → registration/composition
+→ consumer → persistence → user/model-visible behavior
+```
+
+Not every repository has every layer. Follow only layers that exist.
+
+In the same PR or bounded change, update every authority surface whose owned fact changed:
+
+- source and public contracts;
 - relevant tests, fixtures, snapshots, and generated outputs;
-- current-state architecture or package documentation;
-- the owning decision note;
-- repository instructions or gates when the durable workflow itself changed.
+- current architecture, package, API, or user documentation;
+- the owning proposal or decision;
+- repository instructions or checks when the durable workflow itself changed.
 
 Keep the patch scoped to the decision. Record unrelated discoveries instead of folding opportunistic refactors into the change.
+
+The convergence unit is the PR or bounded change stack, not each intermediate commit. Checkpoint commits may isolate implementation, review fixes, measurements, or lifecycle rewriting as long as the complete change converges before delivery.
 
 ## Review against the real consumer
 
 Before claiming completion:
 
-1. Re-read the user request and owning note without looking at the implementation first.
+1. Re-read the user request and owning proposal without looking at the implementation first.
 2. Check each acceptance criterion against direct evidence.
 3. Trace at least one real assembled execution path for user- or model-visible behavior.
 4. Check negative guarantees: what must no longer exist, happen, or be reachable.
-5. Review from the caller, model, user, and future maintainer perspective—not only the implementing module.
-6. Run the narrow relevant checks locally; leave unrelated full matrices to the repository's established CI unless the user requests them.
-7. Report commands actually run, meaningful outputs, skipped checks, and remaining uncertainty. Reserve “passed” for an executed check; describe manual source/doc comparison as “inspected” with exact paths. Never translate “not run” into “passed.”
+5. Review from the caller, user/model, operator, and future maintainer perspectives.
+6. Run the narrow relevant checks locally; leave unrelated full matrices to established CI unless the user requests them or the change is irreducibly repository-wide.
+7. Report commands actually run, meaningful outcomes, skipped checks, and remaining uncertainty. Reserve “passed” for executed checks.
 
 ## Converge lifecycle and current truth
 
-After the implementation and evidence agree, move `proposed` to `implemented` and rewrite it as present truth:
+After implementation and evidence agree, rewrite the working proposal as a stable decision according to the repository's convention:
 
-- change `Proposal` to `Decision`;
-- replace future plans with what actually shipped;
-- fold acceptance and risks into present-tense consequences and testing/verification;
-- update paths, package names, defaults, contracts, and other factual locations;
+- when one file carries both stages, rewrite its title and semantic sections; never change only the status word;
+- replace future proposal language with the decision that actually shipped;
+- fold acceptance and risks into present-tense consequences and verification;
+- update paths, names, defaults, contracts, and other factual locations;
 - preserve why the decision won and what it gave up.
 
-If the proposal is declined, move it to `rejected`, put the concise reason in the status, and preserve the evaluated proposal and alternatives. If a decision changes, supersede it with a new cross-linked note; do not edit the old note into its opposite.
+If the proposal is declined, retain the evaluated proposal and concise rejection reason only while that rationale prevents a plausible repeated mistake.
 
-Archive only implemented decisions whose rationale is unlikely to guide future work. Keep active any note that still owns an alternative, boundary, negative guarantee, durable or wire semantic, security rule, reintroduction condition, or named coverage gap. Never use archived text as current authority.
+Supersession is a relationship between decisions, not a required status or directory. A stable replacement gets a new cross-linked record. Partial replacement keeps both records current and states which clauses each owns. Fully consolidate, retire, or archive an old record only after the current owner preserves every unique rationale, alternative, consequence, verification obligation, coverage gap, reintroduction condition, and inbound link.
 
-Finish by checking that current-state docs describe current behavior, active notes describe current decisions, tests pin observable promises, and no proposed text falsely reads as completed.
+Finish by checking that current docs describe current behavior, stable decisions describe current rationale, tests pin observable promises, and working proposals do not falsely read as completed.
 
 ## Report the outcome
 
 Lead with what is now true. Then identify:
 
-- the owning decision note and lifecycle transition;
+- the owning proposal or decision and its lifecycle change;
+- whether the work updated an existing owner or justified a new one;
+- any requirement delta and the authority that approved it;
 - behavior and authority surfaces changed;
 - acceptance evidence and commands actually run;
 - explicit gaps, blockers, or work deliberately left proposed.
 
-Do not call a phase complete merely because Markdown exists or a checker exits zero.
+Do not call work complete merely because a document exists or a checker exits zero.

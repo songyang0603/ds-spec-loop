@@ -1,64 +1,69 @@
 # Documentation discipline
 
-The distributed spec works only when each fact has one owner and historical material does not crowd out current truth.
+The distributed Spec works only when each fact has one owner and historical material does not crowd out current truth.
 
 ## Separate current facts from rationale
 
-- Put current system topology in architecture and subsystem docs.
-- Put public usage and contract details in package docs, types, and generated references.
-- Put why, alternatives, and consequences in active implemented notes.
-- Put agent procedure in instructions and Skills.
-- Put executable observations in tests, snapshots, and runnable examples.
-- Keep archive out of ordinary current-state search unless history is explicitly needed.
+- Put current topology and behavior in architecture, API, package, and user documentation.
+- Put public contracts in types, schemas, generated references, and current docs.
+- Put why, alternatives, and consequences in the owning stable decision.
+- Put agent procedure in repository instructions and Skills.
+- Put executable observations in tests, examples, snapshots, and runtime checks.
+- Keep historical records out of ordinary current-authority search unless history is requested.
 
-Link to an owner instead of copying detailed content into multiple files.
+Link to an owner instead of copying detailed content.
 
-## Avoid spec-speak after implementation
+## Keep decision ownership coarse enough
 
-Implemented documentation should describe present reality. Remove:
+Before creating a decision record, ask:
+
+- Does an existing record already own the problem or contract?
+- Is this only a follow-up implementation, bug, test layer, or factual location update?
+- Does the proposed record have an independent problem, real alternatives, consequences, and reversal boundary?
+- Could future maintainers meaningfully replace this decision without replacing its parent?
+
+Changed files, phases, and test surfaces do not get separate records by default.
+
+## Remove proposal language after delivery
+
+Current documentation and stable decisions describe present reality. Remove:
 
 - completed checklists and migration plans;
-- predictions written as current facts;
+- predictions written as facts;
 - empty TODOs and speculative roadmap sections;
-- `Proposal`, `Acceptance criteria`, or `Risks` headings in implemented notes;
-- stale inventories better produced from source;
-- repeated API reference copied into decision rationale.
+- proposal and acceptance headings from a stable decision;
+- stale inventories better derived from source;
+- repeated API references copied into rationale.
 
-Preserve real deferred work as proposed work or a precisely scoped current limitation. Do not hide it by changing tense.
+Preserve deferred work as a working proposal or precise current limitation.
 
 ## Use generated references deliberately
 
-Generate exhaustive inventories when source can produce them reliably. Treat the generator/source as canonical and add a freshness check; do not hand-edit generated output into a second authority.
+Generate exhaustive inventories when source can produce them reliably. Treat source and generator as canonical, add freshness checks only when justified, and do not hand-edit generated output into a second owner.
 
-Human-written current-state docs should explain ownership and composition, not duplicate every generated entry.
+## Control growth
 
-## Control documentation growth
-
-When instructions or docs become difficult to load and maintain:
+When documentation becomes difficult to load:
 
 1. remove duplication and stale history;
-2. move detail to its correct artifact tier;
+2. move detail to its owning artifact;
 3. tighten language while preserving complete propositions;
 4. split by subsystem with clear navigation;
-5. only then raise a documented budget or ceiling when the information genuinely earns it.
+5. add or raise a budget only when the information earns the space.
 
-A document budget is a mechanical pressure against unbounded growth, not proof of clarity or correctness. Do not invent numerical ceilings for a repository without observing its context constraints and maintenance pattern.
+Do not create central indexes, archive machinery, or numerical budgets without an observed problem and clear owner.
 
 ## Keep alternatives real
 
-Alternatives must have been plausible under the problem and constraints. One bold-led paragraph per alternative is usually enough. Do not create straw alternatives or generic claims such as “do nothing is worse” merely to satisfy a template.
+Alternatives must have been plausible under the problem and constraints. Do not invent “do nothing” or other straw alternatives to satisfy a template.
 
-## Prefer search over fragile indexes
+## Review what checks cannot decide
 
-Lifecycle/class directories, descriptive filenames, relative links, and repository search often provide adequate discovery. Do not add a hand-maintained or generated central index unless it solves an observed navigation problem and has a clear freshness owner.
+Review still owns whether:
 
-## Review what gates cannot decide
-
-Human or agent review still owns:
-
-- whether the problem is correctly framed;
-- whether a decision serves the real consumer;
-- whether alternatives and trade-offs are honest;
-- whether acceptance criteria match user intent;
-- whether evidence actually addresses the likely failure;
-- whether a note remains worth keeping active.
+- the problem is framed correctly;
+- the decision serves the real consumer;
+- alternatives and trade-offs are honest;
+- acceptance matches user intent;
+- evidence addresses likely failure;
+- a historical record remains worth keeping.

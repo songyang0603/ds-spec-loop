@@ -1,4 +1,4 @@
 interface:
-  display_name: "DS Spec Loop"
+  display_name: "Spec Loop"
   short_description: "Keep specs, code, tests, and docs aligned"
-  default_prompt: "Use $ds-spec-loop to implement this repository change while keeping decisions, code, tests, evidence, and current documentation aligned."
+  default_prompt: "Use $ds-spec-loop to implement this change with one owning decision and keep requirements, code, tests, and current documentation aligned."
